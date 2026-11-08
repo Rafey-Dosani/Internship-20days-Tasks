@@ -1,0 +1,19 @@
+{
+  "name": "day-11-authentication-authorization",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A PostgreSQL-backed Express API with JWT authentication and role-based authorization.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
+  }
+}
