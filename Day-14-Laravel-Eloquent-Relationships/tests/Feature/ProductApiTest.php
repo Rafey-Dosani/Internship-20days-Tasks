@@ -53,6 +53,41 @@ class ProductApiTest extends TestCase
             ->assertJsonCount(2, 'data.products');
     }
 
+    public function test_category_can_be_created_updated_and_deleted(): void
+    {
+        $this->postJson('/api/categories', [
+            'name' => 'Stationery',
+            'description' => 'Office and school supplies.',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.name', 'Stationery');
+
+        $category = Category::query()->where('name', 'Stationery')->firstOrFail();
+
+        $this->patchJson("/api/categories/{$category->id}", [
+            'name' => 'Office Supplies',
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.name', 'Office Supplies');
+
+        $this->deleteJson("/api/categories/{$category->id}")
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing('categories', ['id' => $category->id]);
+    }
+
+    public function test_category_creation_rejects_invalid_data(): void
+    {
+        Category::factory()->create(['name' => 'Books']);
+
+        $this->postJson('/api/categories', [
+            'name' => 'Books',
+            'description' => ['invalid'],
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['name', 'description']);
+    }
+
     public function test_product_can_be_created_with_a_valid_category(): void
     {
         $category = Category::factory()->create();

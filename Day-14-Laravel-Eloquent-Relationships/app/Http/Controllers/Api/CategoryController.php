@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
@@ -22,5 +26,29 @@ class CategoryController extends Controller
     public function show(Category $category): CategoryResource
     {
         return new CategoryResource($category->loadCount('products')->load('products'));
+    }
+
+    public function store(StoreCategoryRequest $request): JsonResponse
+    {
+        $category = Category::query()->create($request->validated());
+
+        return (new CategoryResource($category))
+            ->response()
+            ->setStatusCode(201)
+            ->header('Location', route('categories.show', $category));
+    }
+
+    public function update(UpdateCategoryRequest $request, Category $category): CategoryResource
+    {
+        $category->update($request->validated());
+
+        return new CategoryResource($category->loadCount('products'));
+    }
+
+    public function destroy(Category $category): Response
+    {
+        $category->delete();
+
+        return response()->noContent();
     }
 }
