@@ -1,0 +1,100 @@
+:host {
+  min-width: 0;
+}
+
+.product-card {
+  height: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #e6eae7;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 5px 18px rgba(28, 43, 35, 0.04);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  border-color: #cfddd5;
+  box-shadow: 0 12px 28px rgba(28, 43, 35, 0.09);
+}
+
+.card-heading,
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.category {
+  color: #718078;
+  background: #f1f4f2;
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.delete-button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #99a39e;
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 1;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.delete-button:hover {
+  color: #a74444;
+  background: #fff1f1;
+}
+
+h3 {
+  min-height: 48px;
+  margin: 18px 0 22px;
+  color: #1b241f;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.card-footer strong {
+  color: #1f5a43;
+  font-size: 19px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.available {
+  color: #397b5d;
+}
+
+.available span {
+  background: #47a178;
+}
+
+.unavailable {
+  color: #8b7770;
+}
+
+.unavailable span {
+  background: #c79b8e;
+}

@@ -1,0 +1,140 @@
+<app-header [productCount]="products().length" />
+
+<main>
+  <section class="hero">
+    <div>
+      <p class="eyebrow">PRODUCT MANAGEMENT</p>
+      <h1>Product catalog</h1>
+      <p class="subtitle">Manage inventory and keep the collection up to date.</p>
+    </div>
+  </section>
+
+  <section class="summary-grid" aria-label="Inventory summary">
+    <div class="summary-card">
+      <span class="summary-label">Total products</span>
+      <strong>{{ products().length }}</strong>
+      <span class="summary-note">All categories</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label">Available</span>
+      <strong>{{ availableCount() }}</strong>
+      <span class="summary-note">Ready to sell</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label">Out of stock</span>
+      <strong>{{ outOfStockCount() }}</strong>
+      <span class="summary-note">Needs attention</span>
+    </div>
+  </section>
+
+  <section class="workspace">
+    <aside class="form-panel">
+      <div class="panel-heading">
+        <span class="panel-icon">+</span>
+        <div>
+          <h2>Add product</h2>
+          <p>Create a new catalog item</p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="addProduct()" #productForm="ngForm" novalidate>
+        <label for="name">Product name</label>
+        <input
+          id="name"
+          name="name"
+          [(ngModel)]="formProduct.name"
+          required
+          minlength="2"
+          placeholder="e.g. Aluminum stand"
+          [class.invalid]="submitted() && (!formProduct.name || formProduct.name.trim().length < 2)"
+        />
+        @if (submitted() && (!formProduct.name || formProduct.name.trim().length < 2)) {
+          <small class="field-error">Enter at least 2 characters.</small>
+        }
+
+        <label for="category">Category</label>
+        <select id="category" name="category" [(ngModel)]="formProduct.category" required>
+          @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+
+        <label for="price">Price</label>
+        <div class="price-input">
+          <span>$</span>
+          <input
+            id="price"
+            name="price"
+            type="number"
+            min="0.01"
+            step="0.01"
+            [(ngModel)]="formProduct.price"
+            required
+            placeholder="0.00"
+            [class.invalid]="submitted() && (formProduct.price === null || formProduct.price <= 0)"
+          />
+        </div>
+        @if (submitted() && (formProduct.price === null || formProduct.price <= 0)) {
+          <small class="field-error">Enter a price greater than zero.</small>
+        }
+
+        <label class="availability-toggle">
+          <input name="available" type="checkbox" [(ngModel)]="formProduct.available" />
+          <span class="toggle" aria-hidden="true"></span>
+          <span>Available in stock</span>
+        </label>
+
+        @if (feedback()) {
+          <div class="feedback" role="status">{{ feedback() }}</div>
+        }
+
+        <button class="submit-button" type="submit">Add product</button>
+      </form>
+    </aside>
+
+    <div class="catalog-panel">
+      <div class="catalog-toolbar">
+        <div>
+          <h2>Catalog</h2>
+          <p>{{ filteredProducts().length }} of {{ products().length }} products shown</p>
+        </div>
+        <div class="filters">
+          <div class="search-box">
+            <span aria-hidden="true">&#9906;</span>
+            <input
+              type="search"
+              [value]="searchText()"
+              (input)="onSearch($any($event.target).value)"
+              placeholder="Search products..."
+              aria-label="Search products"
+            />
+          </div>
+          <select
+            [value]="selectedCategory()"
+            (change)="onCategoryChange($any($event.target).value)"
+            aria-label="Filter by category"
+          >
+            @for (category of categoryOptions(); track category) {
+              <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      @if (filteredProducts().length > 0) {
+        <div class="product-grid">
+          @for (product of filteredProducts(); track product.id) {
+            <app-product-card [product]="product" (delete)="deleteProduct($event)" />
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <span class="empty-icon">⌕</span>
+          <h3>No products found</h3>
+          <p>Try changing your search or category filter.</p>
+          <button type="button" (click)="clearFilters()">Clear filters</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

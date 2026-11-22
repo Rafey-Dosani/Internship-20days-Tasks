@@ -1,0 +1,17 @@
+<article class="product-card">
+  <div class="card-heading">
+    <span class="category">{{ product().category }}</span>
+    <button class="delete-button" type="button" (click)="onDelete()" [attr.aria-label]="'Delete ' + product().name">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <h3>{{ product().name }}</h3>
+  <div class="card-footer">
+    <strong>{{ product().price | currency:'USD':'symbol':'1.2-2' }}</strong>
+    @if (product().available) {
+      <span class="status available"><span></span> In stock</span>
+    } @else {
+      <span class="status unavailable"><span></span> Out of stock</span>
+    }
+  </div>
+</article>
