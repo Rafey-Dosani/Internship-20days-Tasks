@@ -1,0 +1,57 @@
+<a class="back-link" routerLink="/products">
+  <span aria-hidden="true">←</span> Back to products
+</a>
+
+@let detailState = state();
+
+@if (detailState.kind === 'loading') {
+  <p class="feedback" role="status" aria-live="polite" aria-busy="true">
+    <span class="spinner" aria-hidden="true"></span>
+    Loading product details…
+  </p>
+} @else if (detailState.kind === 'error') {
+  <section class="feedback error" role="alert" aria-labelledby="error-title">
+    <h1 id="error-title">Product unavailable</h1>
+    <p>{{ detailState.message }}</p>
+    <a class="return-link" routerLink="/products">Browse all products</a>
+  </section>
+} @else if (detailState.kind === 'loaded') {
+  @let item = detailState.product;
+  <article class="detail-card">
+    <p class="eyebrow">PRODUCT #{{ item.id }}</p>
+    <h1>{{ item.name }}</h1>
+    <p class="price">{{ item.price | currency }}</p>
+    <dl class="product-details">
+      <div>
+        <dt>Category</dt>
+        <dd>{{ item.category?.name ?? 'Uncategorized' }}</dd>
+      </div>
+      @if (item.category?.description) {
+        <div>
+          <dt>Category description</dt>
+          <dd>{{ item.category?.description }}</dd>
+        </div>
+      }
+      <div>
+        <dt>Description</dt>
+        <dd>{{ item.description || 'No description provided.' }}</dd>
+      </div>
+      <div>
+        <dt>Category ID</dt>
+        <dd>{{ item.category_id }}</dd>
+      </div>
+      @if (item.created_at) {
+        <div>
+          <dt>Created</dt>
+          <dd>{{ item.created_at | date: 'medium' }}</dd>
+        </div>
+      }
+      @if (item.updated_at) {
+        <div>
+          <dt>Last updated</dt>
+          <dd>{{ item.updated_at | date: 'medium' }}</dd>
+        </div>
+      }
+    </dl>
+  </article>
+}

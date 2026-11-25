@@ -1,0 +1,50 @@
+<section class="page-heading" aria-labelledby="page-title">
+  <div>
+    <p class="eyebrow">YOUR INVENTORY</p>
+    <h1 id="page-title">Products</h1>
+    <p class="intro">Browse the catalog and select a product to see its details.</p>
+  </div>
+</section>
+
+@if (navigationNotice()) {
+  <p class="notice" role="status">{{ navigationNotice() }}</p>
+}
+
+@if (isLoading()) {
+  <p class="feedback" role="status" aria-live="polite" aria-busy="true">
+    <span class="spinner" aria-hidden="true"></span>
+    Loading products…
+  </p>
+} @else if (errorMessage()) {
+  <div class="feedback error" role="alert">
+    <p>{{ errorMessage() }}</p>
+    <button type="button" class="secondary-button" (click)="loadProducts()">Try again</button>
+  </div>
+} @else if (products().length === 0) {
+  <p class="feedback empty" role="status">No products are available yet.</p>
+} @else {
+  <ul class="product-grid" aria-label="Product list">
+    @for (product of products(); track product.id) {
+      <li>
+        <article class="product-card">
+          <div class="card-topline">
+            <span class="category">{{ product.category?.name ?? 'Uncategorized' }}</span>
+            <span class="product-id">#{{ product.id }}</span>
+          </div>
+          <h2>{{ product.name }}</h2>
+          <p class="description">{{ product.description || 'No description provided.' }}</p>
+          <div class="card-footer">
+            <p class="price">{{ product.price | currency }}</p>
+            <a
+              class="details-link"
+              [routerLink]="['/products', product.id]"
+              [attr.aria-label]="'View details for ' + product.name"
+            >
+              View details <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+      </li>
+    }
+  </ul>
+}

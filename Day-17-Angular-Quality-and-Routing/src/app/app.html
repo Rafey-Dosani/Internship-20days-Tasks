@@ -1,0 +1,15 @@
+<header class="site-header">
+  <a class="brand" routerLink="/products" aria-label="Product Catalog home">
+    <span class="brand-mark" aria-hidden="true">P</span>
+    <span>Product Catalog</span>
+  </a>
+  <nav aria-label="Main navigation">
+    <a routerLink="/products" routerLinkActive="active" ariaCurrentWhenActive="page">
+      Products
+    </a>
+  </nav>
+</header>
+
+<main class="page-shell">
+  <router-outlet />
+</main>

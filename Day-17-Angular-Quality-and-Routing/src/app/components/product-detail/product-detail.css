@@ -1,0 +1,127 @@
+.back-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 24px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.back-link:hover,
+.return-link:hover {
+  text-decoration: underline;
+}
+
+.feedback,
+.detail-card {
+  border: 1px solid #e6ecf4;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 26px rgb(22 46 78 / 4%);
+}
+
+.feedback {
+  display: flex;
+  min-height: 150px;
+  align-items: center;
+  gap: 14px;
+  padding: 28px;
+  color: #526179;
+}
+
+.feedback.error {
+  display: block;
+  border-color: #f0c5c5;
+  color: #8b2525;
+}
+
+.feedback h1 {
+  margin: 0 0 10px;
+  font-size: 1.5rem;
+}
+
+.feedback p {
+  margin: 0 0 18px;
+  line-height: 1.55;
+}
+
+.return-link {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  font-weight: 750;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d5e0ee;
+  border-top-color: #145ac2;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.detail-card {
+  padding: clamp(24px, 5vw, 48px);
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: #59718f;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.045em;
+}
+
+.price {
+  margin: 14px 0 32px;
+  color: #145ac2;
+  font-size: 1.55rem;
+  font-weight: 800;
+}
+
+.product-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 22px 40px;
+  margin: 0;
+}
+
+.product-details div {
+  min-width: 0;
+}
+
+.product-details dt {
+  margin-bottom: 7px;
+  color: #738198;
+  font-size: 0.8rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.product-details dd {
+  margin: 0;
+  color: #26364d;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2s;
+  }
+}
