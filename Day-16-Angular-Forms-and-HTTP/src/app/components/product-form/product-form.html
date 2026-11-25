@@ -1,0 +1,133 @@
+<main class="page-shell">
+  <section class="intro-panel" aria-labelledby="page-title">
+    <div class="brand-mark" aria-hidden="true">P</div>
+    <p class="eyebrow">Catalog workspace</p>
+    <h1 id="page-title">Create a product</h1>
+    <p class="intro-copy">Add a new item to the Laravel product catalog with clean, validated details.</p>
+
+    <div class="api-status">
+      <span class="status-dot" [class.offline]="isLoadingCategories"></span>
+      <div>
+        <strong>{{ isLoadingCategories ? 'Connecting to API' : 'API ready' }}</strong>
+        <small>Categories are loaded from Laravel</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-panel" aria-label="Product creation form">
+    <form [formGroup]="productForm" (ngSubmit)="submit()" novalidate>
+      <div class="form-header">
+        <div>
+          <p class="step-label">Product details</p>
+          <h2>New catalog item</h2>
+        </div>
+        <span class="required-note"><b>*</b> Required</span>
+      </div>
+
+      @if (successMessage) {
+        <div class="feedback success-feedback" role="status">
+          <span class="feedback-icon">✓</span>
+          <div><strong>Success</strong><p>{{ successMessage }}</p></div>
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div class="feedback error-feedback" role="alert">
+          <span class="feedback-icon">!</span>
+          <div><strong>Could not save product</strong><p>{{ errorMessage }}</p></div>
+        </div>
+      }
+
+      <div class="field-grid">
+        <div class="field field-full">
+          <label for="name">Product name <b>*</b></label>
+          <input id="name" type="text" formControlName="name" maxlength="255"
+                 [attr.aria-invalid]="fieldError('name')"
+                 [attr.aria-describedby]="fieldError('name') ? 'name-error' : null"
+                 placeholder="e.g. Wireless desk lamp" />
+          @if (fieldError('name')) {
+            <div id="name-error" class="field-error" aria-live="polite">
+              @if (productForm.controls.name.errors?.['required']) { Product name is required. }
+              @else if (productForm.controls.name.errors?.['minlength']) { Use at least 2 characters. }
+              @else if (productForm.controls.name.errors?.['maxlength']) { Use 255 characters or fewer. }
+              @else if (backendErrors['name']) { {{ backendErrors['name'][0] }} }
+            </div>
+          } @else if (backendErrors['name']) {
+            <div class="field-error">{{ backendErrors['name'][0] }}</div>
+          }
+        </div>
+
+        <div class="field">
+          <label for="category">Category <b>*</b></label>
+          <select id="category" formControlName="category_id"
+                  [attr.aria-invalid]="fieldError('category_id')"
+                  [attr.aria-describedby]="fieldError('category_id') ? 'category-error' : null">
+            <option [ngValue]="null" disabled>
+              {{ isLoadingCategories ? 'Loading categories...' : 'Select a category' }}
+            </option>
+            @for (category of categories; track category.id) {
+              <option [ngValue]="category.id">{{ category.name }}</option>
+            }
+          </select>
+          @if (fieldError('category_id')) {
+            <div id="category-error" class="field-error" aria-live="polite">
+              @if (productForm.controls.category_id.errors?.['required']) { Choose a category. }
+              @else if (backendErrors['category_id']) { {{ backendErrors['category_id'][0] }} }
+            </div>
+          } @else if (backendErrors['category_id']) {
+            <div class="field-error">{{ backendErrors['category_id'][0] }}</div>
+          }
+        </div>
+
+        <div class="field">
+          <label for="price">Price <b>*</b></label>
+          <div class="price-input">
+            <span>$</span>
+            <input id="price" type="text" inputmode="decimal" formControlName="price"
+                   [attr.aria-invalid]="fieldError('price')"
+                   [attr.aria-describedby]="fieldError('price') ? 'price-error' : null"
+                   placeholder="0.00" />
+          </div>
+          @if (fieldError('price')) {
+            <div id="price-error" class="field-error" aria-live="polite">
+              @if (productForm.controls.price.errors?.['required']) { Price is required. }
+              @else if (productForm.controls.price.errors?.['positiveMoney']) { Enter a valid amount from 0 to 99999999.99. }
+              @else if (backendErrors['price']) { {{ backendErrors['price'][0] }} }
+            </div>
+          } @else if (backendErrors['price']) {
+            <div class="field-error">{{ backendErrors['price'][0] }}</div>
+          }
+        </div>
+
+        <div class="field field-full">
+          <label for="description">Description <span>Optional</span></label>
+          <textarea id="description" formControlName="description" maxlength="2000" rows="5"
+                    [attr.aria-invalid]="fieldError('description')"
+                    [attr.aria-describedby]="fieldError('description') ? 'description-error' : null"
+                    placeholder="Describe the product, its features, or intended use..."></textarea>
+          <div class="field-meta">
+            @if (fieldError('description')) {
+              <div id="description-error" class="field-error">Use 2000 characters or fewer.</div>
+            } @else if (backendErrors['description']) {
+              <div class="field-error">{{ backendErrors['description'][0] }}</div>
+            }
+            <span>{{ productForm.controls.description.value?.length ?? 0 }}/2000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="secondary-button" (click)="productForm.reset()">Clear</button>
+        <button type="submit" class="submit-button" [disabled]="isLoading">
+          @if (isLoading) {
+            <span class="spinner" aria-hidden="true"></span>
+            Creating product...
+          } @else {
+            Create product
+            <span aria-hidden="true">→</span>
+          }
+        </button>
+      </div>
+    </form>
+  </section>
+</main>
